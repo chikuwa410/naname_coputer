@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "queue": "cpp",
+        "stack": "cpp",
+        "random": "cpp",
+        "cstdint": "cpp",
+        "variant": "cpp",
+        "chrono": "cpp",
+        "locale": "cpp",
+        "iterator": "cpp",
+        "cstdlib": "cpp",
+        "bitset": "cpp",
+        "optional": "cpp",
+        "memory": "cpp",
+        "complex": "cpp",
+        "cmath": "cpp"
+    }
+}

@@ -1,0 +1,3 @@
+/home/shu/pico/pico-sdk/Benzen_new/pioasm/CMakeFiles/pioasm.dir
+/home/shu/pico/pico-sdk/Benzen_new/pioasm/CMakeFiles/edit_cache.dir
+/home/shu/pico/pico-sdk/Benzen_new/pioasm/CMakeFiles/rebuild_cache.dir
