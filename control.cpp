@@ -116,9 +116,7 @@ float Phi, Theta, Psi = 0.0;
 float Phi_ref = 0.0, Theta_ref = 0.0, Psi_ref = 0.0;
 float Elevator_center = 0.0, Aileron_center = 0.0, Rudder_center = 0.0;
 float Pref = 0.0, Qref = 0.0, Rref = 0.0;
-float Phi_trim = 0.0;
-float Theta_trim = 0.0;
-float Psi_trim = 0.0;
+
 const double pi = 3.14159;
 float Line_trace_flag = 0;
 
@@ -437,9 +435,9 @@ void control_init(void)
 
   // Rate control
   //tim　↑105 ←８４
-  p_pid.set_parameter(0.06, 100000.0, 0.0, 0.125, 0.0025); //ikaring(2.2, 5, 0.01) itocopter(2.5, 100, 0.009)
-  q_pid.set_parameter(0.06, 100000.0, 0.0, 0.125, 0.0025); //ikaring(1.5, 1, 0.01) itocopter(2.5, 100, 0.009)
-  r_pid.set_parameter(0.2, 100000.0, 0.0, 0.125, 0.0025);  //ikaring(3.1, 1, 0.01) itocopter(3.5, 10, 0.009)
+  p_pid.set_parameter(0.08, 10000.0, 0.021, 0.125, 0.0025); //ikaring(2.2, 5, 0.01) itocopter(2.5, 100, 0.009)
+  q_pid.set_parameter(0.08, 10000.0, 0.021, 0.125, 0.0025); //ikaring(1.5, 1, 0.01) itocopter(2.5, 100, 0.009)
+  r_pid.set_parameter(0.3, 10000.0, 0.01, 0.125, 0.0025);  //ikaring(3.1, 1, 0.01) itocopter(3.5, 10, 0.009)
   // Angle control0.
   phi_pid.set_parameter(2, 11000.0, 0, 0.125, 0.01);   // 6.0  8.0,20,0.007      //1
   theta_pid.set_parameter(2, 10000.0, 0.007, 0.125, 0.01); // 6.0  8.0,20,0.007 // 1.6      
@@ -627,6 +625,7 @@ void rate_control(void)
   float RL_duty = (T_ref + (1.7655*P_com   - 3.0562 *Q_com - 1.7655 *R_com)  ) ;
   float ML_duty = (T_ref + (3.5311*P_com   - 0.0*Q_com     + 1.7655 *R_com)  ) ;
   float FL_duty = (T_ref + (1.7655 *P_com  + 3.0562 *Q_com - 1.7655 *R_com)  ) ;
+  // printf("%d %d %d %d\n",Chdata[4],Chdata[5],Chdata[6],Chdata[7]);
 
 
   float minimum_duty = 0.1;
@@ -685,20 +684,19 @@ void rate_control(void)
   {
     if (OverG_flag == 0)
     {
-      set_duty_fr(FR_duty);//FR_duty1
-      set_duty_fl(FL_duty);//FL_duty1
-      set_duty_mr(MR_duty);//MR_duty
-      set_duty_ml(ML_duty);//ML_duty1
-      set_duty_rr(RR_duty);//RR_duty1
-      set_duty_rl(RL_duty);//RL_duty
-       
-    // //  set_duty_fl(FL_duty);//MR_duty
-    //   // set_duty_mr(MR_duty);//FL_duty 1
-    //   // set_duty_ml(ML_duty);//RL_duty1
-    //   set_duty_rr(RR_duty);//FR_duty1
-    //   //  set_duty_rl(RL_duty);//ML_duty1
-     }
-
+      // set_duty_fr(FR_duty);//FR_duty1
+      // set_duty_fl(FL_duty);//FL_duty1
+      if(Chdata[4]<500){
+        set_duty_ml(ML_duty);
+      }//MR_duty
+      else if(Chdata[4]>500 &&Chdata[4]<1300){
+        set_duty_fl(FL_duty);
+      }
+      else{
+            set_duty_ml(ML_duty);
+            set_duty_fl(FL_duty);//FL_duty1
+      }
+    }
     else
       motor_stop();
     // printf("%12.5f %12.5f %12.5f\n",p_rate, q_rate, r_rate);
@@ -710,6 +708,9 @@ void angle_control(void)
   float phi_err, theta_err, psi_err;
   float q0, q1, q2, q3;
   float e23, e33, e13, e11, e12;
+  float Phi_trim = -6*M_PI/180;
+  float Theta_trim = 2*M_PI/180;
+  float Psi_trim = 0.0;
   while (1)
   {
     sem_acquire_blocking(&sem); // 時間統制
