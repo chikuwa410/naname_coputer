@@ -84,7 +84,7 @@ float Line_range = 0.0;
 float Line_velocity = 0.0;
 
 //flowsensor
-int16_t dx, dy;
+
  
 uint8_t qual;
 
@@ -221,7 +221,6 @@ void receiveData(char c);
 #define AVERAGE 2000
 #define KALMANWAIT 6000
 
-extern PMW3901* flow;
 
 // Main loop
 // This function is called from PWM Intrupt on 400Hz.
@@ -441,17 +440,6 @@ void loop_400Hz(void)
   D_time = E_time - S_time;
 
 
-static int flow_cnt = 0;
-flow_cnt++;
-
-if (flow != nullptr && flow_cnt >= 4) {  // 100Hz
-  flow_cnt = 0;  // ← これ絶対必要
-  printf("hello\n");
-
-  flow->readMotion(&dx, &dy); 
-  printf("dx=%d ,dy=%d ,qual=%d\n", dx, dy);
-}
-    
 
 }
 

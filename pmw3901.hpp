@@ -5,7 +5,7 @@
 #include "hardware/spi.h"
 #include <cstdint>
 
-#define PMW3901_SPI_CLOCK 2000000
+#define PMW3901_SPI_CLOCK 1000000
 #define PMW3901_DELAY_US 50
 
 class PMW3901 {

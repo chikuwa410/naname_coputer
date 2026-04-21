@@ -4,9 +4,11 @@
 uint8_t Arm_flag = 0;
 uint8_t Red_flag = 0;
 semaphore_t sem;
+int16_t dx, dy;
 
 // Optical Flow ポインタ
 PMW3901* flow = nullptr;
+extern PMW3901* flow;
 
 int main(void)
 {
@@ -91,6 +93,12 @@ int main(void)
 
 
         sleep_ms(100);
+    
+    if (flow->readMotion(&dx, &dy)) {
+    printf("dx=%d ,dy=%d\n", dx, dy);
+    } else {
+    printf("readMotion FAILED\n");
+    }
     }
 
     // ===== 終了処理 =====

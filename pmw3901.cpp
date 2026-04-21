@@ -24,7 +24,6 @@ void PMW3901::cs_high() {
 bool PMW3901::initRegisters()
 {
     uint8_t read_val;
-    bool ok = readRegister(0x47, &read_val);
 
     printf("Step 6.1: Initial settings\n");
 
@@ -44,16 +43,13 @@ bool PMW3901::initRegisters()
     for (int i = 0; i < 3; i++) {
         writeRegister(0x43, 0x10);
 
-        read_val = readRegister(0x47, &read_val);
+    if (readRegister(0x47, &read_val) && read_val == 0x08) {
+        verification_ok = true;
+        printf("Verification OK (%d)\n", i + 1);
+        break;
+    }
 
-        if (read_val == 0x08 ) {
-            verification_ok = true;
-            printf("Verification OK (%d)\n", i + 1);
-            break;
-        }
-
-        printf("Verification NG (%d): 0x%02X\n", i + 1, read_val);
-        sleep_ms(1);
+    printf("Verification NG: 0x%02X\n", read_val);        sleep_ms(1);
     }
 
     if (!verification_ok) {
@@ -65,8 +61,8 @@ bool PMW3901::initRegisters()
     // Step 6.3: Conditional write
     // =========================
     printf("Step 6.3\n");
-
-    read_val = readRegister(0x67, &read_val);
+    
+    readRegister(0x67, &read_val);
 
     if (read_val & 0x80) {
         printf("Bit7=1 → write 0x04\n");
@@ -91,13 +87,14 @@ bool PMW3901::initRegisters()
     // Step 6.5: C1/C2
     // =========================
     printf("Step 6.5\n");
-
-    read_val = readRegister(0x73,&read_val);
-
+    
+    readRegister(0x73, &read_val) ;
+    printf("0x73 = 0x%02X\n", read_val);
     if (read_val == 0x00) {
-        uint8_t c1 = readRegister(0x70 ,&read_val);
-        uint8_t c2 = readRegister(0x71 ,&read_val);
-
+        uint8_t c1 ;
+        uint8_t c2 ;
+        readRegister(0x70 ,&c1);
+        readRegister(0x71 ,&c2);
         printf("C1=0x%02X C2=0x%02X\n", c1, c2);
 
         uint8_t new_c1;
@@ -119,7 +116,8 @@ bool PMW3901::initRegisters()
         writeRegister(0x7F, 0x0E);
         writeRegister(0x70, new_c1);
         writeRegister(0x71, new_c2);
-    } else {
+    } 
+    else {
         printf("Skip C1/C2\n");
     }
 
@@ -220,7 +218,7 @@ bool PMW3901::initRegisters()
 
 bool PMW3901::readRegister(uint8_t reg, uint8_t *value)
 {
-    uint8_t addr = reg & 0x7F;
+    uint8_t addr = (uint8_t)(reg & 0x7F); // MSB=0 for Read [6]
     uint8_t data = 0;
 
     cs_low();
@@ -229,35 +227,40 @@ bool PMW3901::readRegister(uint8_t reg, uint8_t *value)
     spi_write_blocking(_spi, &addr, 1);
 
     // ② tSRAD待ち（超重要）
-    sleep_us(2);   // ← ここが今回の本質（最低でも数µs）
+    sleep_us(35);   // ← ここが今回の本質（最低でも数µs）
 
     // ③ データ受信
     spi_read_blocking(_spi, 0x00, &data, 1);
 
     cs_high();
 
-    sleep_us(PMW3901_DELAY_US);
+    sleep_us(20);
 
     *value = data;
     return true;
 }
 
-bool PMW3901::writeRegister(uint8_t reg, uint8_t value)
-{
-    // 書き込みのためMSBを1にする [1]
-    uint8_t tx[5] = { (uint8_t)(reg | 0x80), value };
+bool PMW3901::writeRegister(uint8_t reg, uint8_t value) {
+    // 1. 書き込みを示すためアドレスのMSBを1に設定 [4]
+    uint8_t addr = (uint8_t)(reg | 0x80);
+    uint8_t tx_data[5] = { addr, value };
 
-    cs_low(); // NCSをLowにする [6, 7]
-    
-    // 16ビット（2バイト）を送信 [7]
-    spi_write_blocking(_spi, tx, 2);
+    // 2. NCSをLowにしてシリアルポートをアクティブにする [6, 7]
+    cs_low();
 
-    // 【重要】書き込み時はNCSをHighにする前に35us待つ [2]
-    sleep_us(35); 
+    // 3. アドレスとデータを送信（計2バイト）[4]
+    // ※ 多くのSPIドライバは送信完了後すぐに戻るため、直後の遅延が重要
+    spi_write_blocking(_spi, tx_data, 2);
 
-    cs_high(); // ここでNCSをHighに戻す [6, 7]
+    // 4. 【重要】最後のSCLKからNCSをHighに戻すまで35μs待機 (tSCLK-NCS) [3, 8]
+    // これを怠ると、チップがデータを内部レジスタに取り込めません。
+    sleep_us(35);
 
-    // 次の書き込み(tSWW)または読み取り(tSWR)まで45us待機 [3, 4]
+    // 5. NCSをHighにしてトランザクションを終了 [7]
+    cs_high();
+
+    // 6. 【重要】次のSPIコマンドを開始するまで45μs待機 (tSWW / tSWR) [1, 2, 9, 10]
+    // 連続した書き込みや、その後の読み取りを正常に行うための時間です。
     sleep_us(45);
 
     return true;
@@ -426,20 +429,35 @@ bool PMW3901::pmw_deinit(){
 }
 
 bool PMW3901::readMotion(int16_t *delta_x, int16_t *delta_y) {
+    // printf("PMW3901 sTep1\n");
+
     uint8_t motion, xl, xh, yl, yh;
     uint8_t squal, shutter_upper;
-    bool ret;
+    // printf("PMW3901 sTep2\n");
 
     // 1. Motionレジスタを読み取り、データをフリーズさせる [1]
-    ret = readRegister(0x02, &motion);
-    if (!ret) return false;
+if (!readRegister(0x02, &motion))
+    return false;
+
+// printf("motion=0x%02X\n", motion);
+
+// ★ここで先に読んでしまう
+readRegister(0x07, &squal);
+readRegister(0x0C, &shutter_upper);
+
+// printf("squal=%d\n", squal);
+// printf("shutter=%d\n", shutter_upper);
+
+// そのあとに判定
+if (!(motion & 0x80)) {
+    *delta_x = 0;
+    *delta_y = 0;
+    return true;
+}
 
     // 動きがない場合は0を返して終了（Bit 7を確認）[2]
-    if (!(motion & 0x80)) {
-        *delta_x = 0;
-        *delta_y = 0;
-        return true;
-    }
+
+    // printf("PMW3901 sTep3\n");
 
     // 2. 移動量レジスタを順番に読み取る [5], [6]
     readRegister(0x03, &xl);
@@ -450,6 +468,8 @@ bool PMW3901::readMotion(int16_t *delta_x, int16_t *delta_y) {
     // 3. 偽モーション抑制のための追加情報を読み取る [3]
     readRegister(0x07, &squal);
     readRegister(0x0C, &shutter_upper);
+   
+    // printf("PMW3901 sTep4\n");
 
     // 4. データの検証 [3], [4]
     if (squal < 0x19 && shutter_upper == 0x1F) {
@@ -457,10 +477,12 @@ bool PMW3901::readMotion(int16_t *delta_x, int16_t *delta_y) {
         *delta_y = 0;
         return true; // 無効なデータとして処理
     }
+    // printf("PMW3901 sTep5\n");
 
     // 5. 16ビット符号付き整数に結合 [2]
     *delta_x = (int16_t)((xh << 8) | xl);
     *delta_y = (int16_t)((yh << 8) | yl);
+    // printf("PMW3901 sTep6\n");
 
     return true;
 }

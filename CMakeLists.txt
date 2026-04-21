@@ -24,6 +24,7 @@ add_executable(pico_copter
   rgbled.cpp
   i2c.cpp
   pid.cpp
+  pmw3901.cpp
   vl53l1_platform.c
   VL53L1X_api.c
   VL53L1X_calibration.c
