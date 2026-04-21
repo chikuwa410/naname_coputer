@@ -72,10 +72,9 @@ float L_merker_flag = 0;
 float TOL_x_alpha = 0;
 float TOL_y_alpha = 0;
 float x_alpha = 0;
-float altitude = 0;
+float altitude = 1;
 int length_count = 0;
-
-
+float dt = 0.0025f;   // 1 / 400
 
 
 // Sensor data
@@ -83,6 +82,22 @@ float Ax, Ay, Az, Wp, Wq, Wr, Mx, My, Mz, Mx0, My0, Mz0, Mx_ave, My_ave, Mz_ave;
 float Acc_norm = 0.0;
 float Line_range = 0.0;
 float Line_velocity = 0.0;
+
+//flowsensor
+int16_t dx, dy;
+ 
+uint8_t qual;
+
+enum Rotation {
+    ROTATION_NONE = 0,
+    ROTATION_YAW_45 = 1,
+    ROTATION_YAW_90 = 2,
+    ROTATION_YAW_135 = 3,
+    ROTATION_YAW_180 = 4,
+    ROTATION_YAW_225 = 5,
+    ROTATION_YAW_270 = 6,
+    ROTATION_YAW_315 = 7
+};
 
 // Initial data
 float rate_limit = 180.0;
@@ -95,6 +110,7 @@ uint8_t Flight_mode = 0;
 // Times
 float Elapsed_time = 0.0;
 uint32_t S_time = 0, E_time = 0, D_time = 0, S_time2 = 0, E_time2 = 0, D_time2 = 0;
+uint16_t logtime2=0;
 
 // Counter
 uint8_t AngleControlCounter = 0;
@@ -167,6 +183,7 @@ Filter Range_filter;
 Filter Angle_filter;
 Filter Velocity_filter;
 
+
 void loop_400Hz(void);
 void rate_control(void);
 void sensor_read(void);
@@ -200,10 +217,11 @@ void takeoff_merker(void);
 void landing_merker(void);
 void send_data_via_uart(void);
 void receiveData(char c);
-
+//void flow_sensor(void);
 #define AVERAGE 2000
 #define KALMANWAIT 6000
 
+extern PMW3901* flow;
 
 // Main loop
 // This function is called from PWM Intrupt on 400Hz.
@@ -421,6 +439,20 @@ void loop_400Hz(void)
   }
   E_time = time_us_32();
   D_time = E_time - S_time;
+
+
+static int flow_cnt = 0;
+flow_cnt++;
+
+if (flow != nullptr && flow_cnt >= 4) {  // 100Hz
+  flow_cnt = 0;  // ← これ絶対必要
+  printf("hello\n");
+
+  flow->readMotion(&dx, &dy); 
+  printf("dx=%d ,dy=%d ,qual=%d\n", dx, dy);
+}
+    
+
 }
 
 
@@ -627,7 +659,6 @@ void rate_control(void)
   float FL_duty = (T_ref + (1.7655 *P_com  + 3.0562 *Q_com - 1.7655 *R_com)  ) ;
   // printf("%d %d %d %d\n",Chdata[4],Chdata[5],Chdata[6],Chdata[7]);
 
-
   float minimum_duty = 0.1;
   const float maximum_duty = 0.95;
   minimum_duty = Disable_duty;
@@ -684,19 +715,14 @@ void rate_control(void)
   {
     if (OverG_flag == 0)
     {
-      // set_duty_fr(FR_duty);//FR_duty1
-      // set_duty_fl(FL_duty);//FL_duty1
-      if(Chdata[4]<500){
-        set_duty_ml(ML_duty);
-      }//MR_duty
-      else if(Chdata[4]>500 &&Chdata[4]<1300){
-        set_duty_fl(FL_duty);
-      }
-      else{
-            set_duty_ml(ML_duty);
-            set_duty_fl(FL_duty);//FL_duty1
-      }
-    }
+      set_duty_fr(FR_duty);//FR_duty
+      set_duty_fl(FL_duty);//MR_duty
+      set_duty_mr(MR_duty);//FL_duty
+      set_duty_ml(ML_duty);//RL_duty
+      set_duty_rr(RR_duty);//FR_duty
+      set_duty_rl(RL_duty);//ML_duty
+      
+       }
     else
       motor_stop();
     // printf("%12.5f %12.5f %12.5f\n",p_rate, q_rate, r_rate);
@@ -850,8 +876,12 @@ void angle_control(void)
     }
 
     // Logging  100Hzで情報を記憶
-    logging();
-
+    if(logtime2%10==0){
+      logging();
+      
+      printf("%d",logtime2);
+    }
+    logtime2++;
     E_time2 = time_us_32();
     D_time2 = E_time2 - S_time2;
   }
@@ -1316,3 +1346,14 @@ void kalman_filter(void)
   Z << Ax, Ay, Az, Mx, My, Mz;
   ekf(Xp, Xe, P, Z, Omega_m, Q, R, G * dt, Beta, dt);
 }
+
+
+// void flow_sensor(void){
+//   uint16_t vx;
+//   uint16_t vy;
+//   float dt =0.01;
+//   flow->readMotion(dx, dy, qual);  
+//   vx = dx/dt;
+//   vy = dy/dt;
+//   printf("vx= %d vy= %d\n",vx,vy);
+// }

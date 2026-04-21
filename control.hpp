@@ -12,6 +12,7 @@
 #include <math.h>
 #include "rgbled.hpp"
 #include "pid.hpp"
+#include "pmw3901.hpp"
 
 using Eigen::MatrixXd;
 using Eigen::MatrixXf;
@@ -52,7 +53,7 @@ extern float z_acc;
 extern float func_time;
 extern float T_ref;
 extern uint64_t count_up;
-
+extern PMW3901* flow; 
 
 
 //グローバル変数
