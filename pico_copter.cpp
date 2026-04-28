@@ -1,11 +1,13 @@
 #include "pico_copter.hpp"
-#include "modules/tof/tof_bridge.hpp"
 extern float Phi, Theta; // ToFの値を角度補正するために姿勢データを使う
 
 //グローバル変数
 uint8_t Arm_flag=0;
 uint8_t Red_flag = 0;
 semaphore_t sem;
+
+// Optical Flow ポインタ
+PMW3901* flow = nullptr;
 
 
 int main(void)
@@ -65,34 +67,31 @@ int main(void)
   multicore_launch_core1(angle_control);  
 
   //ToFセンサの初期化
-  tof_setup();
-
+  initialize_Altitude();
   Arm_flag=1;
-  
+
+  flow = new PMW3901(spi0, 16, 19, 18, 17);
+  flow->pmw_init();
+
+  if (flow != nullptr) { // nullptr チェックのみ
+      printf("# optical flow ready\r\n");
+  } else {
+      printf("Error: Optical flow sensor init failed!\n");
+  }
+
   while(1) 
   {
-    // ToFセンサから値を取得 
-    tof_poll(); 
-    // uint16_t z_mm = 0; 
-    // bool z_ok = tof_read_valid(&z_mm); 
-    
-    // // 1秒に1回だけシリアルモニタに出力する 
-    // static uint32_t last_print_us = 0; 
-    // uint32_t now = time_us_32(); 
-    // if ((now - last_print_us) > 1000000) { 
-    //   last_print_us = now; 
-    //   if (z_ok) { 
-    //     float corrected_z = (float)z_mm * cosf(Phi) * cosf(Theta); 
-    //     printf("TOF Raw: %4u mm | Corrected: %4.1f mm\r\n", z_mm, corrected_z); 
-    //   } else { 
-    //     printf("TOF Raw: NA\r\n"); 
-    //   } 
-    // }
-    
+
     tight_loop_contents(); 
     while (Logoutputflag==1){ 
       log_output(); 
     } 
   }  
+
+      // ===== 終了処理 =====
+    if (flow) {
+        delete flow;
+        flow = nullptr;
+    }
   return 0;
 }

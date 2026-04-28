@@ -1,7 +1,3 @@
-/home/itolab/Members/Masters/Okabe/projects/Benzen_Perfect2025/build/pioasm/CMakeFiles/pioasm.dir
-/home/itolab/Members/Masters/Okabe/projects/Benzen_Perfect2025/build/pioasm/CMakeFiles/edit_cache.dir
-/home/itolab/Members/Masters/Okabe/projects/Benzen_Perfect2025/build/pioasm/CMakeFiles/rebuild_cache.dir
-/home/itolab/Members/Masters/Okabe/projects/Benzen_Perfect2025/build/pioasm/CMakeFiles/list_install_components.dir
-/home/itolab/Members/Masters/Okabe/projects/Benzen_Perfect2025/build/pioasm/CMakeFiles/install.dir
-/home/itolab/Members/Masters/Okabe/projects/Benzen_Perfect2025/build/pioasm/CMakeFiles/install/local.dir
-/home/itolab/Members/Masters/Okabe/projects/Benzen_Perfect2025/build/pioasm/CMakeFiles/install/strip.dir
+/home/shu/pico/pico-sdk/naname2_tof&flow/build/pioasm/CMakeFiles/pioasm.dir
+/home/shu/pico/pico-sdk/naname2_tof&flow/build/pioasm/CMakeFiles/edit_cache.dir
+/home/shu/pico/pico-sdk/naname2_tof&flow/build/pioasm/CMakeFiles/rebuild_cache.dir

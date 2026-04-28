@@ -1,6 +1,5 @@
 
 #include "control.hpp"
-#include "modules/tof/tof_bridge.hpp"
 
 bool first_run = true;
 // alt control
@@ -82,6 +81,10 @@ int flip_flag1;
 int flip_flag2;
 float flip_p_ref=0 ,flip_q_ref=0, flip_r_ref=0;
 float v_left=0, v_right=0;
+
+//flow data
+float vx, vy;
+const float dt = 0.01;
 
 // Sensor data
 float Ax, Ay, Az, Wp, Wq, Wr, Mx, My, Mz, Mx0, My0, Mz0, Mx_ave, My_ave, Mz_ave;
@@ -213,6 +216,8 @@ void takeoff_merker(void);
 void landing_merker(void);
 void send_data_via_uart(void);
 void receiveData(char c);
+void flow_sensor(void);
+
 
 #define AVERAGE 2000
 #define KALMANWAIT 6000
@@ -273,7 +278,7 @@ void loop_400Hz(void)
   led_control();
 
   //high fall
-  high_fall();
+//  high_fall();
 
 
   if (Arm_flag == 0)
@@ -478,14 +483,28 @@ void loop_400Hz(void)
   }
   E_time = time_us_32();
   D_time = E_time - S_time;
+
+      // ToFセンサから値を取得 
+    // tof_poll(); 
+    // uint16_t z_mm = 0; 
+    // bool z_ok = tof_read_valid(&z_mm); 
+    
+    // // 1秒に1回だけシリアルモニタに出力する 
+    // static uint32_t last_print_us = 0; 
+    // uint32_t now = time_us_32(); 
+    // if ((now - last_print_us) > 1000000) { 
+    //   last_print_us = now; 
+    //   if (z_ok) { 
+    //     float corrected_z = (float)z_mm * cosf(Phi) * cosf(Theta); 
+    //     printf("TOF Raw: %4u mm | Corrected: %4.1f mm\r\n", z_mm, corrected_z); 
+    //   } else { 
+    //     printf("TOF Raw: NA\r\n"); 
+    //   } 
+    // }
+    
+
 }
 
-// void send_data_via_uart(const char* data) {
-//     while (*data != '\0') {
-//         uart_putc(UART_ID2, *data);
-//         data++;
-//     }
-// }
 
 void control_init(void)
 {
@@ -496,14 +515,6 @@ void control_init(void)
 
 
   // Rate control
-  // p_pid.set_parameter(0.032, 1000.0, 0.0225, 0.125, 0.0025); //ikaring(2.2, 5, 0.01) itocopter(2.5, 100, 0.009)
-  // q_pid.set_parameter(0.032, 1000.0, 0.0225, 0.125, 0.0025); //ikaring(1.5, 1, 0.01) itocopter(2.5, 100, 0.009)
-  // r_pid.set_parameter(0.21, 10000.0, 0.01, 0.125, 0.0025);  //ikaring(3.1, 1, 0.01) itocopter(3.5, 10, 0.009)
-  // // Angle control
-  // phi_pid.set_parameter(2.1, 1000.0, 0, 0.125, 0.01);   // 6.0  8.0,20,0.007      //1
-  // theta_pid.set_parameter(2.1, 1000.0, 0.007, 0.125, 0.01); // 6.0  8.0,20,0.007 // 1.6      
-  // psi_pid.set_parameter(0, 1000, 0, 0, 0.01);     //0 1000 0.01
-
   p_pid.set_parameter(0.032, 1000.0, 0.0125, 0.125, 0.0025); //ikaring(2.2, 5, 0.01) itocopter(2.5, 100, 0.009)
   q_pid.set_parameter(0.032, 1000.0, 0.0125, 0.125, 0.0025); //ikaring(1.5, 1, 0.01) itocopter(2.5, 100, 0.009)
   r_pid.set_parameter(0.21, 10000.0, 0.01, 0.125, 0.0025);  //ikaring(3.1, 1, 0.01) itocopter(3.5, 10, 0.009)
@@ -777,7 +788,7 @@ void rate_control(void)
   // Get reference
   //unique mission change
   if((Chdata[FLIP])>200){
-    unique_mission();
+    //unique_mission();
     p_ref =flip_p_ref;
     q_ref =flip_q_ref;
     r_ref =flip_r_ref;
@@ -1054,6 +1065,9 @@ void rate_control(void)
   // logging();
 }
 
+extern PMW3901* flow;
+
+
 void angle_control(void)
 {
   float phi_err, theta_err, psi_err;
@@ -1212,6 +1226,9 @@ void angle_control(void)
 
     E_time2 = time_us_32();
     D_time2 = E_time2 - S_time2;
+    
+    flow_sensor();
+
   }
 }
 
@@ -1682,207 +1699,85 @@ void sensor_read(void)
   Mz /= mag_norm;
 
 // 高度センサーから値受け取るコード（new）
-  altitude_count = altitude_count + 1;
-  if (altitude_count == 8) { // 400Hzを8回に1回実行 = 50Hzで更新
-    altitude_count = 0;
+  // altitude_count = altitude_count + 1;
+  // if (altitude_count == 8) { // 400Hzを8回に1回実行 = 50Hzで更新
+  //   altitude_count = 0;
     
-    uint16_t z_mm = 0;
-    // ToFセンサーから新しい距離データが取得できた場合
-    if (tof_read_valid(&z_mm)) {
-      float distance = (float)z_mm; // ToFの生の値（ミリメートル）
+  //   uint16_t z_mm = 0;
+  //   // ToFセンサーから新しい距離データが取得できた場合
+  //   if (tof_read_valid(&z_mm)) {
+  //     float distance = (float)z_mm; // ToFの生の値（ミリメートル）
       
-      z_acc = Az - 9.76548; // Z軸加速度から重力加速度成分を引く
+  //     z_acc = Az - 9.76548; // Z軸加速度から重力加速度成分を引く
       
-      // ドローンの傾きから、真下方向の距離を計算（三角関数による補正）
-      lotate_altitude_init(Theta, Psi, Phi);
-      lotated_distance = lotate_altitude(distance);
+  //     // ドローンの傾きから、真下方向の距離を計算（三角関数による補正）
+  //     lotate_altitude_init(Theta, Psi, Phi);
+  //     lotated_distance = lotate_altitude(distance);
       
-      // カルマンフィルタに補正済み距離と加速度を渡して、滑らかな高度を推定
-      Kalman_alt = Kalman_PID(lotated_distance, z_acc);
-      altitude = mu_Yn_est(1,0); 
+  //     // カルマンフィルタに補正済み距離と加速度を渡して、滑らかな高度を推定
+  //     Kalman_alt = Kalman_PID(lotated_distance, z_acc);
+  //     altitude = mu_Yn_est(1,0); 
       
-      // シリアルモニタでの確認用（約1秒に1回出力）
-      static uint32_t print_count = 0;
-      if (print_count++ > 50) { 
-          printf("Raw: %4.0f mm | Corrected: %4.1f mm | Kalman: %4.1f mm\r\n", distance, lotated_distance, Kalman_alt);
-          print_count = 0;
+  //     // シリアルモニタでの確認用（約1秒に1回出力）
+  //     static uint32_t print_count = 0;
+  //     if (print_count++ > 50) { 
+  //         printf("Raw: %4.0f mm | Corrected: %4.1f mm | Kalman: %4.1f mm\r\n", distance, lotated_distance, Kalman_alt);
+  //         print_count = 0;
+  //     }
+  //   }
+      altitude_count = altitude_count + 1;
+    if (altitude_count == 8){
+      altitude_count = 0;
+      uint8_t checkdata[2];
+      int result = i2c_read_blocking(I2C_PORT, dev, checkdata, sizeof(checkdata), false);
+      if (result != 2)
+      {
+        // I2C通信エラーチェック
+        // エラーが発生した場合、I2C通信が切断されたとみなす
+        // ここで適切なエラーハンドリングを行う
+        Flight_mode = NORMAL;
+        i2c_connect = 0;
+        printf("I2C通信エラーが発生しました。 %4d\n", result);
+      }
+      else
+      {
+        // printf("I2C通信接続できました。 %4d\n",result);
+        // 高度センサーから値受け取るコード
+        if (isDataReady == 0)
+        {
+          Status = VL53L1X_CheckForDataReady(dev, &isDataReady);
+        }
+        else if (isDataReady == 1)
+        {
+          isDataReady = 0;
+          Status = VL53L1X_GetRangeStatus(dev, &rangeStatus);
+          Status = VL53L1X_GetDistance(dev, &distance);
+          Status = VL53L1X_ClearInterrupt(dev);
+          // z_acc  = Az-9.80665;
+          z_acc = Az - 9.76548;
+          lotate_altitude_init(Theta, Psi, Phi);
+          lotated_distance = lotate_altitude(distance);
+          Kalman_alt = Kalman_PID(lotated_distance, z_acc);
+          altitude = mu_Yn_est(1,0);
+
+          static int print_counter = 0;
+          print_counter++;
+          if(Flight_mode !=HOVERING){
+
+            if (print_counter >= 50) { // 50Hz → 1Hz
+              print_counter = 0;
+
+              printf("Raw: %d mm\n", distance);                 // 生値
+              printf("Corrected: %f mm\n", lotated_distance);   // 姿勢補正
+              printf("Kalman: %f mm\n\n", Kalman_alt);          // フィルタ
+            }
+          }
+
+        }
       }
     }
+
   }
-
-  // // 高度センサーから値受け取るコード
-  // altitude_count = altitude_count + 1;
-  // if (altitude_count == 8){
-  //   altitude_count = 0;
-  //   uint8_t checkdata[2];
-  //   int result = i2c_read_blocking(I2C_PORT, dev, checkdata, sizeof(checkdata), false);
-  //   if (result != 2)
-  //   {
-  //     // I2C通信エラーチェック
-  //     // エラーが発生した場合、I2C通信が切断されたとみなす
-  //     // ここで適切なエラーハンドリングを行う
-  //     Flight_mode = NORMAL;
-  //     i2c_connect = 0;
-  //     printf("I2C通信エラーが発生しました。 %4d\n", result);
-  //   }
-  //   else
-  //   {
-  //     // printf("I2C通信接続できました。 %4d\n",result);
-  //     // 高度センサーから値受け取るコード
-  //     if (isDataReady == 0)
-  //     {
-  //       Status = VL53L1X_CheckForDataReady(dev, &isDataReady);
-  //     }
-  //     else if (isDataReady == 1)
-  //     {
-  //       isDataReady = 0;
-  //       Status = VL53L1X_GetRangeStatus(dev, &rangeStatus);
-  //       Status = VL53L1X_GetDistance(dev, &distance);
-  //       Status = VL53L1X_ClearInterrupt(dev);
-  //       // z_acc  = Az-9.80665;
-  //       z_acc = Az - 9.76548;
-  //       lotate_altitude_init(Theta, Psi, Phi);
-  //       lotated_distance = lotate_altitude(distance);
-  //       Kalman_alt = Kalman_PID(lotated_distance, z_acc);
-  //       altitude = mu_Yn_est(1,0);
-  //       // if ((Kalman_alt - last_Kalman_alt) > 500 || (Kalman_alt - last_Kalman_alt) < 500)
-  //       // {
-  //       //   Kalman_alt = last_Kalman_alt;
-  //       // }
-  //       // else{
-  //       //   last_Kalman_alt = Kalman_alt;
-  //       // }
-  //       // printf("%f senser_dis:\r\n",lotated_distance);
-  //       // printf("%f z_acc:\r\n",z_acc);
-  //       // printf("%f kalman_v:\r\n",mu_Yn_est(0,0));
-  //       if(Flight_mode !=HOVERING){
-  //       printf("%f mu:\r\n",mu_Yn_est(1,0));
-  //       printf("%f altitude:\r\n",altitude);
-  //       printf("%f Kalman_alt:\r\n",Kalman_alt);
-  //       }
-  //     }
-  //   }
-  // }
-
-  // //OpenMV通信用
-  // if (Flight_mode == LINETRACE && i2c_connect == 1){
-  // if (Flight_mode == LINETRACE){
-
-  //   //着陸のFlightModeを決める
-  //   if(landing_counter == 1 ){
-  //   uart_putc(UART_ID2,'3');
-  //   }
-  //   else{
-  //     uart_putc(UART_ID2,'1');
-  //   }
-
-  //   while (uart_is_readable(UART_ID2)){
-  //     char c = uart_getc(UART_ID2);
-  //     receiveData(c);
-  //   }
-  // }
-
-
-  // if(Flight_mode == HOVERING)
-  // {
-  //   uart_putc(UART_ID2,'3');
-  //   if (uart_is_readable(UART_ID2))
-  //   {
-  //     char c = uart_getc(UART_ID2);
-  //     receiveData(c);
-  //   }
-  // }
-
-  // OpenMV通信用 データ受信 カメラの中心と対象物との距離を測定
-  // if ((Flight_mode == REDCIRCLE) && (i2c_connect == 1))
-  // // if ((Flight_mode == REDCIRCLE))
-  // {
-  //   uart_putc(UART_ID2,'2');
-  //   printf("REDCIRCLE\r\n");
-  //   if (uart_is_readable(UART_ID2))
-  //   {
-  //     // float *a;
-  //     // // extern float length;
-  //     // int i;
-  //     // unsigned char buf[BUFFER_SIZE];
-  //     // for (i = 0; i < BUFFER_SIZE; i++)
-  //     // {
-  //     //   buf[i] = uart_getc(UART_ID2);
-  //     // }
-  //     // a = (float *)buf;
-  //     // length = *a;
-  //     char c = uart_getc(UART_ID2);
-  //     receiveData(c);
-
-  //     // loop_count+=1;
-
-  //     // printf("loop_count:%d\n" , loop_count);
-
-  //     // if (loop_count > 400){
-  //     //   loop_count = 0;
-  //     //   red_count = 0;
-  //     // }    
-
-  //     // if (red_circle == 1){
-  //     //   red_count+=1;
-  //     // }
-
-  //     // printf("red_count:%d\n" , red_count);
-
-  //     // if (red_count > 20 && loop_count <=400){
-  //     //   release_flag = 1;
-  //     //   // payload_relese();
-  //     //   // printf("release\n");
-  //     // }
-
-  //     // if (release_flag == 1){
-  //     //   payload_relese();
-  //     //   red_count = 0;
-  //     //   loop_count = 0;
-  //     // }
-
-  //     // else{
-  //     //   payload_hook();
-  //     // }
-
-  //     // printf("%f %f\n",Theta,length);
-  //     // 自動物資投下
-  //     // printf("Theta:%f\n", Theta);
-  //     // printf("Phi:%f\n", Phi);
-  //     // printf("length:%f\n", length);
-
-  //     // float degreePhi = Phi * (180 / pi);
-  //     // float degreeTheta = Theta * (180 / pi);
-
-  //     // float corrected_length_Phi = length * fabsf(cos(degreePhi));
-  //     // float corrected_length_Theta = length * fabsf(cos(degreeTheta));
-
-  //     // float corrected_length = (corrected_length_Phi + corrected_length_Theta) / 2;
-
-  //     // printf("%f\n", corrected_length);
-
-  //     // if (corrected_length <= 10)
-  //     // {
-  //     //   // if(length <= 10){
-  //     //   length_count++;
-  //     // }
-  //     // else
-  //     // {
-  //     //   length_count = 0;
-  //     // }
-
-  //     // if (length_count > 3 && length_count <= 10)
-  //     // {
-  //     //   payload_relese();
-  //     // }
-  //     // else
-  //     // {
-  //     //   payload_hook();
-  //     // }
-  //     // printf("%.8f\n",D_time);
-  //   }
-  // }
-}
 
 void variable_init(void)
 {
@@ -2010,228 +1905,25 @@ void output_sensor_raw_data(void)
 void kalman_filter(void)
 {
   // Kalman Filter
-  float dt = 0.01;
+  
   Omega_m << Wp, Wq, Wr;
   Z << Ax, Ay, Az, Mx, My, Mz;
   ekf(Xp, Xe, P, Z, Omega_m, Q, R, G * dt, Beta, dt);
 }
 
-void unique_mission(){
- 
-    float ahrs_flag;
+void flow_sensor(void){
 
-    uint8_t flip_delay=180;
-    float flip_time=0.6;
-    uint16_t flip_add_time=240;//flip_time/0.0025;
 
-    float domega;
-    uint16_t flip_second_time =flip_delay+(flip_add_time+10)+400;
-   
-    domega=8*M_PI/flip_time/flip_time*0.00221;
+    int16_t dx, dy;
+    float vx, vy;
 
-    if(flip_count<flip_delay){
-        T_ref=0.70;
-        flip_p_ref = Pref;
-        flip_q_ref = Qref;
-        flip_r_ref = Rref;
-        flip_count++;
-        // printf("1");
+    if (flow->readMotionBurst(&dx, &dy)) {
+
+        flow->pmw3901_calculate_velocity_direct(dx, dy, Kalman_alt, dt, &vx, &vy);
+
+        static int cnt = 0;
+        // if (++cnt % 10 == 0) {
+        //     printf("vx=%f, vy=%f\n", vx, vy);
+        // }
     }
-    else if(flip_count<flip_delay+ 1*flip_add_time/6 ){//0~60
-   
-        T_ref=0.65;
-        flip_p_ref+=domega;
-        flip_count++;
-        // printf("2");
-
-    }
-   else if(flip_count<flip_delay+ 2*flip_add_time/6){//60~120度
-       
-        T_ref=0.45;
-        flip_p_ref+=domega;
-
-        flip_count++;
-        // printf("3");
-
-    } else if(flip_count<flip_delay+ 3*flip_add_time/6){//120~180度
-       
-        T_ref=0.25;
-        flip_p_ref+=domega;
-
-        flip_count++;
-        // printf("3");
-
-    } else if(flip_count<flip_delay+ 4*flip_add_time/6){//180~240度
-       
-        T_ref=0.30;
-        flip_p_ref-=domega;
-
-        flip_count++;
-        // printf("3");
-
-    }
-    else if(flip_count<flip_delay+ 5*flip_add_time/6){//240~300
-       
-        T_ref=0.55;
-        flip_p_ref-=domega;
-
-        flip_count++;
-        // printf("3");
-
-    }
-    else if(flip_count<flip_delay+ flip_add_time){//300~360度
-       
-        T_ref=0.65;
-        flip_p_ref-=domega;
-
-        flip_count++;
-        // printf("3");
-
-    }
-    else if(flip_count<flip_delay+(flip_add_time+10)){//休憩
-        
-        T_ref =0.70;
-        if(ahrs_flag==0){
-            ahrs_flag=1;
-            Phi_ref=0;
-            Theta_ref=0;
-            Psi_ref =0;
-        }
-        flip_p_ref=0.0;
-        flip_count ++;
-        // printf("6");
-    }
-    else if(flip_count<flip_delay+flip_second_time){
-        T_ref=0.75;
-        flip_p_ref = Pref;
-        flip_q_ref = Qref;
-        flip_r_ref = Rref;
-        flip_count++;
-        // printf("1");
-    }
-    else if(flip_count<flip_delay+ 1*flip_add_time/6+flip_second_time ){//0~60
-   
-        T_ref=0.65;
-        flip_q_ref+=(-domega);
-        flip_count++;
-        // printf("2");
-
-    }
-    else if(flip_count<flip_delay+ 2*flip_add_time/6+flip_second_time){//60~120度
-       
-        T_ref=0.45;
-        flip_q_ref+=(-domega);
-
-        flip_count++;
-        // printf("3");
-
-    }
-    else if(flip_count<flip_delay+ 3*flip_add_time/6+flip_second_time){//120~180度
-       
-        T_ref=0.25;
-        flip_q_ref+=(-domega);
-
-        flip_count++;
-        // printf("3");
-
-    }
-    else if(flip_count<flip_delay+ 4*flip_add_time/6+flip_second_time){//180~240度
-        T_ref=0.30;
-        flip_q_ref-=(-domega);
-        // printf("4");
-       
-        flip_count++;
-
-    }
-    else if(flip_count<flip_delay+ 5*flip_add_time/6+flip_second_time){//240~300度
-        T_ref=0.55;
-        flip_q_ref-=(-domega);
-        // printf("4");
-       
-        flip_count++;
-
-    }
-    else if(flip_count<flip_delay+(flip_add_time)+flip_second_time){//300~360度
-        T_ref=0.65;
-        flip_q_ref-=(-domega);
-        flip_count++;
-        // printf("5");
-
-    }
-    else if(flip_count<flip_delay+(flip_add_time+10)+flip_second_time){//休憩
-        
-        T_ref =0.70;
-        if(ahrs_flag==0){
-            ahrs_flag=1;
-            Phi_ref=0;
-            Theta_ref=0;
-            Psi_ref =0;
-        }
-        flip_p_ref=0.0;
-        flip_count ++;
-        // printf("6");
-    }
-    else{
-    ahrs_flag=0;
-    flip_count++;
-    T_ref = (float)(Chdata[2] - CH3MIN) / (CH3MAX - CH3MIN);
-    flip_p_ref = Pref;
-    flip_q_ref = Qref;
-    flip_r_ref = Rref;
-
-    }
-}
-
-void high_fall(void) {
-  const float VREF = 3.3f;
-  const float conversion_factor = VREF / 4096.0f;
-
-  adc_select_input(0);
-  uint16_t result_left = adc_read();
-
-  adc_select_input(1);
-  uint16_t result_right = adc_read();
-
-  v_left  = conversion_factor * result_left;
-  v_right = conversion_factor * result_right;
-
-  if (v_left > 0.7 && v_right>0.7&& Chdata[LINETRACE]>200 ){
-      red_count += 1;
-  }
-  else
-      red_count = 0;
-
-      
-  if (red_count>15)
-    red_count=15;
-
-  if (red_count == 15) {
-    red_state = 1;
-  }
-
-    
-  if (red_state == 1 && Chdata[REDCIRCLE] > 200) {
-      // 赤外線検知 ＋ REDCIRCLE信号あり → 2つ目投下
-      payload_hook();   // 0度
-  }
-  else if (red_state == 1) {
-      payload_half();     // 90度
-  }
-  else if (Chdata[HOVERING] < 200) {
-      payload_relese();     // 180度
-  }
-  
-  // else if (Chdata[LOG])
-  else if (Chdata[REDCIRCLE] < 200) {
-      // 手動操作 → フックに戻す
-      payload_half();     // 90度
-  }
-  
-  else {
-      // それ以外は待機（保持）
-      payload_hook();     // 0度
-  }
-
-  //printf("red_state: %d , REDCIRCLE: %d , HOVERING: %d\n", red_state, Chdata[REDCIRCLE], Chdata[HOVERING]);
-  // printf("%d %d %d %d %d %d %d\n",Chdata[4],Chdata[5],Chdata[6],Chdata[7],Chdata[8]);
 }

@@ -12,6 +12,8 @@
 #include <math.h>
 #include "rgbled.hpp"
 #include "pid.hpp"
+#include "pmw3901.hpp"
+
 
 using Eigen::MatrixXd;
 using Eigen::MatrixXf;

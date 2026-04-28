@@ -1,4 +1,4 @@
-# Install script for directory: /home/itolab/pico/pico-sdk/tools
+# Install script for directory: /home/shu/pico/pico-sdk/tools
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

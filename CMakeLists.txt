@@ -10,7 +10,7 @@ set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
 
 pico_sdk_init()
 #include_directories(/home/student01/pico/pico-sdk/eigen)
-include_directories(/usr/include/eigen3) # 持ち主によって変える。
+include_directories(../../eigen)
 
 add_executable(pico_copter
   pico_copter.cpp
@@ -24,9 +24,10 @@ add_executable(pico_copter
   rgbled.cpp
   i2c.cpp
   pid.cpp
-  # vl53l1_platform.c
-  # VL53L1X_api.c
-  # VL53L1X_calibration.c
+  pmw3901.cpp
+  #vl53l1_platform.c
+  #VL53L1X_api.c
+  #VL53L1X_calibration.c
 )
 
 pico_generate_pio_header(pico_copter ${CMAKE_CURRENT_LIST_DIR}/WS2812.pio)
@@ -49,13 +50,13 @@ pico_enable_stdio_uart(pico_copter 0)
 pico_add_extra_outputs(pico_copter)
 
 # Include ToF modules and ST driver
-include_directories(${CMAKE_CURRENT_LIST_DIR}/modules/tof)
+#include_directories(${CMAKE_CURRENT_LIST_DIR}/modules/tof)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/third_party/ST_VL53L1X)
 
 # Add ToF and ST sources
 target_sources(pico_copter PRIVATE
-  modules/tof/tof_bridge.cpp
-  modules/tof/tof_vl53l1x.cpp
+  #modules/tof/tof_bridge.cpp
+  #modules/tof/tof_vl53l1x.cpp
   third_party/ST_VL53L1X/VL53L1X_api.c
   third_party/ST_VL53L1X/vl53l1_platform.c
 )

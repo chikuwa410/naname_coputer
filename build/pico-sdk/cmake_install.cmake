@@ -1,4 +1,4 @@
-# Install script for directory: /home/itolab/pico/pico-sdk
+# Install script for directory: /home/shu/pico/pico-sdk
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -38,17 +38,10 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("/home/itolab/Members/Masters/Okabe/projects/Benzen_Perfect2025/build/pico-sdk/tools/cmake_install.cmake")
-endif()
+  # Include the install script for each subdirectory.
+  include("/home/shu/pico/pico-sdk/naname2_tof&flow/build/pico-sdk/tools/cmake_install.cmake")
+  include("/home/shu/pico/pico-sdk/naname2_tof&flow/build/pico-sdk/src/cmake_install.cmake")
+  include("/home/shu/pico/pico-sdk/naname2_tof&flow/build/pico-sdk/docs/cmake_install.cmake")
 
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("/home/itolab/Members/Masters/Okabe/projects/Benzen_Perfect2025/build/pico-sdk/src/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("/home/itolab/Members/Masters/Okabe/projects/Benzen_Perfect2025/build/pico-sdk/docs/cmake_install.cmake")
 endif()
 

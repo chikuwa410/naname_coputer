@@ -1,4 +1,4 @@
-# Install script for directory: /home/itolab/pico/pico-sdk/src/rp2_common/tinyusb
+# Install script for directory: /home/shu/pico/pico-sdk/src/rp2_common/tinyusb
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
