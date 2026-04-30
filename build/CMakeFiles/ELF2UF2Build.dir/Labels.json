@@ -2,34 +2,34 @@
 	"sources" : 
 	[
 		{
-			"file" : "/home/shu/pico/pico-sdk/naname2_tof&flow/build/CMakeFiles/ELF2UF2Build"
+			"file" : "/home/shu/pico/pico-sdk/naname_coputer-1/build/CMakeFiles/ELF2UF2Build"
 		},
 		{
-			"file" : "/home/shu/pico/pico-sdk/naname2_tof&flow/build/CMakeFiles/ELF2UF2Build.rule"
+			"file" : "/home/shu/pico/pico-sdk/naname_coputer-1/build/CMakeFiles/ELF2UF2Build.rule"
 		},
 		{
-			"file" : "/home/shu/pico/pico-sdk/naname2_tof&flow/build/CMakeFiles/ELF2UF2Build-complete.rule"
+			"file" : "/home/shu/pico/pico-sdk/naname_coputer-1/build/CMakeFiles/ELF2UF2Build-complete.rule"
 		},
 		{
-			"file" : "/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-build.rule"
+			"file" : "/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-build.rule"
 		},
 		{
-			"file" : "/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-configure.rule"
+			"file" : "/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-configure.rule"
 		},
 		{
-			"file" : "/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-download.rule"
+			"file" : "/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-download.rule"
 		},
 		{
-			"file" : "/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-install.rule"
+			"file" : "/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-install.rule"
 		},
 		{
-			"file" : "/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-mkdir.rule"
+			"file" : "/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-mkdir.rule"
 		},
 		{
-			"file" : "/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-patch.rule"
+			"file" : "/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-patch.rule"
 		},
 		{
-			"file" : "/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-update.rule"
+			"file" : "/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-update.rule"
 		}
 	],
 	"target" : 

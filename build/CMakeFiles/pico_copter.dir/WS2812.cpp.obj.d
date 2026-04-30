@@ -1,6 +1,6 @@
 CMakeFiles/pico_copter.dir/WS2812.cpp.obj: \
- /home/shu/pico/pico-sdk/naname2_tof&flow/WS2812.cpp \
- /home/shu/pico/pico-sdk/naname2_tof&flow/WS2812.hpp \
+ /home/shu/pico/pico-sdk/naname_coputer-1/WS2812.cpp \
+ /home/shu/pico/pico-sdk/naname_coputer-1/WS2812.hpp \
  /home/shu/pico/pico-sdk/src/common/pico_base/include/pico/types.h \
  /home/shu/pico/pico-sdk/src/common/pico_base/include/pico/assert.h \
  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdbool.h \
@@ -18,9 +18,9 @@ CMakeFiles/pico_copter.dir/WS2812.cpp.obj: \
  /home/shu/pico/pico-sdk/src/rp2_common/hardware_pio/include/hardware/pio.h \
  /home/shu/pico/pico-sdk/src/common/pico_base/include/pico.h \
  /home/shu/pico/pico-sdk/src/common/pico_base/include/pico/types.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/build/generated/pico_base/pico/version.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/build/generated/pico_base/pico/version.h \
  /home/shu/pico/pico-sdk/src/common/pico_base/include/pico/config.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/build/generated/pico_base/pico/config_autogen.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/build/generated/pico_base/pico/config_autogen.h \
  /home/shu/pico/pico-sdk/src/boards/include/boards/pico.h \
  /home/shu/pico/pico-sdk/src/rp2_common/cmsis/include/cmsis/rename_exceptions.h \
  /home/shu/pico/pico-sdk/src/rp2_common/pico_platform/include/pico/platform.h \
@@ -45,7 +45,7 @@ CMakeFiles/pico_copter.dir/WS2812.cpp.obj: \
  /home/shu/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/m0plus.h \
  /home/shu/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/dreq.h \
  /home/shu/pico/pico-sdk/src/rp2_common/hardware_pio/include/hardware/pio_instructions.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/build/WS2812.pio.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/build/WS2812.pio.h \
  /home/shu/pico/pico-sdk/src/rp2_common/hardware_clocks/include/hardware/clocks.h \
  /home/shu/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/clocks.h \
  /home/shu/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/clocks.h

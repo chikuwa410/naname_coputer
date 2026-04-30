@@ -1,13 +1,13 @@
 # Target labels
  ELF2UF2Build
 # Source files and their labels
-/home/shu/pico/pico-sdk/naname2_tof&flow/build/CMakeFiles/ELF2UF2Build
-/home/shu/pico/pico-sdk/naname2_tof&flow/build/CMakeFiles/ELF2UF2Build.rule
-/home/shu/pico/pico-sdk/naname2_tof&flow/build/CMakeFiles/ELF2UF2Build-complete.rule
-/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-build.rule
-/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-configure.rule
-/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-download.rule
-/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-install.rule
-/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-mkdir.rule
-/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-patch.rule
-/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-update.rule
+/home/shu/pico/pico-sdk/naname_coputer-1/build/CMakeFiles/ELF2UF2Build
+/home/shu/pico/pico-sdk/naname_coputer-1/build/CMakeFiles/ELF2UF2Build.rule
+/home/shu/pico/pico-sdk/naname_coputer-1/build/CMakeFiles/ELF2UF2Build-complete.rule
+/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-build.rule
+/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-configure.rule
+/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-download.rule
+/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-install.rule
+/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-mkdir.rule
+/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-patch.rule
+/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-update.rule

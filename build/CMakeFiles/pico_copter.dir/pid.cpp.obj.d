@@ -1,6 +1,6 @@
 CMakeFiles/pico_copter.dir/pid.cpp.obj: \
- /home/shu/pico/pico-sdk/naname2_tof&flow/pid.cpp \
- /home/shu/pico/pico-sdk/naname2_tof&flow/pid.hpp \
+ /home/shu/pico/pico-sdk/naname_coputer-1/pid.cpp \
+ /home/shu/pico/pico-sdk/naname_coputer-1/pid.hpp \
  /usr/include/newlib/c++/10.3.1/cstdio \
  /usr/include/newlib/c++/10.3.1/arm-none-eabi/thumb/v6-m/nofp/bits/c++config.h \
  /usr/include/newlib/c++/10.3.1/arm-none-eabi/thumb/v6-m/nofp/bits/os_defines.h \

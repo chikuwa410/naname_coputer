@@ -1698,80 +1698,41 @@ void sensor_read(void)
   My /= mag_norm;
   Mz /= mag_norm;
 
-// 高度センサーから値受け取るコード（new）
-  // altitude_count = altitude_count + 1;
-  // if (altitude_count == 8) { // 400Hzを8回に1回実行 = 50Hzで更新
-  //   altitude_count = 0;
-    
-  //   uint16_t z_mm = 0;
-  //   // ToFセンサーから新しい距離データが取得できた場合
-  //   if (tof_read_valid(&z_mm)) {
-  //     float distance = (float)z_mm; // ToFの生の値（ミリメートル）
-      
-  //     z_acc = Az - 9.76548; // Z軸加速度から重力加速度成分を引く
-      
-  //     // ドローンの傾きから、真下方向の距離を計算（三角関数による補正）
-  //     lotate_altitude_init(Theta, Psi, Phi);
-  //     lotated_distance = lotate_altitude(distance);
-      
-  //     // カルマンフィルタに補正済み距離と加速度を渡して、滑らかな高度を推定
-  //     Kalman_alt = Kalman_PID(lotated_distance, z_acc);
-  //     altitude = mu_Yn_est(1,0); 
-      
-  //     // シリアルモニタでの確認用（約1秒に1回出力）
-  //     static uint32_t print_count = 0;
-  //     if (print_count++ > 50) { 
-  //         printf("Raw: %4.0f mm | Corrected: %4.1f mm | Kalman: %4.1f mm\r\n", distance, lotated_distance, Kalman_alt);
-  //         print_count = 0;
-  //     }
-  //   }
-      altitude_count = altitude_count + 1;
-    if (altitude_count == 8){
-      altitude_count = 0;
-      uint8_t checkdata[2];
-      int result = i2c_read_blocking(I2C_PORT, dev, checkdata, sizeof(checkdata), false);
-      if (result != 2)
+  altitude_count = altitude_count + 1;
+  if (altitude_count == 8){
+    altitude_count = 0;
+    uint8_t checkdata[2];
+    int result = i2c_read_blocking(I2C_PORT, dev, checkdata, sizeof(checkdata), false);
+    if (result != 2)
+    {
+      // I2C通信エラーチェック
+      // エラーが発生した場合、I2C通信が切断されたとみなす
+      // ここで適切なエラーハンドリングを行う
+      Flight_mode = NORMAL;
+      i2c_connect = 0;
+      printf("I2C通信エラーが発生しました。 %4d\n", result);
+    }
+    else
+    {
+      // printf("I2C通信接続できました。 %4d\n",result);
+      // 高度センサーから値受け取るコード
+      if (isDataReady == 0)
       {
-        // I2C通信エラーチェック
-        // エラーが発生した場合、I2C通信が切断されたとみなす
-        // ここで適切なエラーハンドリングを行う
-        Flight_mode = NORMAL;
-        i2c_connect = 0;
-        printf("I2C通信エラーが発生しました。 %4d\n", result);
+        Status = VL53L1X_CheckForDataReady(dev, &isDataReady);
       }
-      else
+      else if (isDataReady == 1)
       {
-        // printf("I2C通信接続できました。 %4d\n",result);
-        // 高度センサーから値受け取るコード
-        if (isDataReady == 0)
-        {
-          Status = VL53L1X_CheckForDataReady(dev, &isDataReady);
-        }
-        else if (isDataReady == 1)
-        {
-          isDataReady = 0;
-          Status = VL53L1X_GetRangeStatus(dev, &rangeStatus);
-          Status = VL53L1X_GetDistance(dev, &distance);
-          Status = VL53L1X_ClearInterrupt(dev);
-          // z_acc  = Az-9.80665;
-          z_acc = Az - 9.76548;
-          lotate_altitude_init(Theta, Psi, Phi);
-          lotated_distance = lotate_altitude(distance);
-          Kalman_alt = Kalman_PID(lotated_distance, z_acc);
-          altitude = mu_Yn_est(1,0);
-
-          static int print_counter = 0;
-          print_counter++;
-          if(Flight_mode !=HOVERING){
-
-            if (print_counter >= 50) { // 50Hz → 1Hz
-              print_counter = 0;
-
-              printf("Raw: %d mm\n", distance);                 // 生値
-              printf("Corrected: %f mm\n", lotated_distance);   // 姿勢補正
-              printf("Kalman: %f mm\n\n", Kalman_alt);          // フィルタ
-            }
-          }
+        isDataReady = 0;
+        Status = VL53L1X_GetRangeStatus(dev, &rangeStatus);
+        Status = VL53L1X_GetDistance(dev, &distance);
+        Status = VL53L1X_ClearInterrupt(dev);
+        // z_acc  = Az-9.80665;
+        z_acc = Az - 9.76548;
+        lotate_altitude_init(Theta, Psi, Phi);
+        lotated_distance = lotate_altitude(distance);
+        Kalman_alt = Kalman_PID(lotated_distance, z_acc);
+        altitude = mu_Yn_est(1,0);
+        
 
         }
       }
@@ -1922,8 +1883,9 @@ void flow_sensor(void){
         flow->pmw3901_calculate_velocity_direct(dx, dy, Kalman_alt, dt, &vx, &vy);
 
         static int cnt = 0;
-        // if (++cnt % 10 == 0) {
-        //     printf("vx=%f, vy=%f\n", vx, vy);
-        // }
+    if (++cnt % 10 == 0) {
+      printf("dx=%d, dy=%d, alt=%f[m], dt=%f [s], vx=%f[m/s], vy=%f [m/s]\n",
+         dx, dy, Kalman_alt/1000, dt, vx, vy);        
+      }
     }
 }

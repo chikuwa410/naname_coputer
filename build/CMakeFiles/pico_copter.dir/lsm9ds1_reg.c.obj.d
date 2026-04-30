@@ -1,6 +1,6 @@
 CMakeFiles/pico_copter.dir/lsm9ds1_reg.c.obj: \
- /home/shu/pico/pico-sdk/naname2_tof&flow/lsm9ds1_reg.c \
- /home/shu/pico/pico-sdk/naname2_tof&flow/lsm9ds1_reg.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/lsm9ds1_reg.c \
+ /home/shu/pico/pico-sdk/naname_coputer-1/lsm9ds1_reg.h \
  /usr/include/newlib/stdio.h /usr/include/newlib/_ansi.h \
  /usr/include/newlib/newlib.h /usr/include/newlib/_newlib_version.h \
  /usr/include/newlib/sys/config.h /usr/include/newlib/machine/ieeefp.h \
@@ -25,9 +25,9 @@ CMakeFiles/pico_copter.dir/lsm9ds1_reg.c.obj: \
  /home/shu/pico/pico-sdk/src/common/pico_base/include/pico/assert.h \
  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdbool.h \
  /usr/include/newlib/assert.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/build/generated/pico_base/pico/version.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/build/generated/pico_base/pico/version.h \
  /home/shu/pico/pico-sdk/src/common/pico_base/include/pico/config.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/build/generated/pico_base/pico/config_autogen.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/build/generated/pico_base/pico/config_autogen.h \
  /home/shu/pico/pico-sdk/src/boards/include/boards/pico.h \
  /home/shu/pico/pico-sdk/src/rp2_common/cmsis/include/cmsis/rename_exceptions.h \
  /home/shu/pico/pico-sdk/src/rp2_common/pico_platform/include/pico/platform.h \

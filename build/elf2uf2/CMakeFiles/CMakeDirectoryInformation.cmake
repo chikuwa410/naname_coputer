@@ -3,7 +3,7 @@
 
 # Relative path conversion top directories.
 set(CMAKE_RELATIVE_PATH_TOP_SOURCE "/home/shu/pico/pico-sdk/tools/elf2uf2")
-set(CMAKE_RELATIVE_PATH_TOP_BINARY "/home/shu/pico/pico-sdk/naname2_tof&flow/build/elf2uf2")
+set(CMAKE_RELATIVE_PATH_TOP_BINARY "/home/shu/pico/pico-sdk/naname_coputer-1/build/elf2uf2")
 
 # Force unix paths in dependencies.
 set(CMAKE_FORCE_UNIX_PATHS 1)

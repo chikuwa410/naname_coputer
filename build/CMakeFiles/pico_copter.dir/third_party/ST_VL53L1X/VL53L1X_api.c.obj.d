@@ -1,7 +1,7 @@
 CMakeFiles/pico_copter.dir/third_party/ST_VL53L1X/VL53L1X_api.c.obj: \
- /home/shu/pico/pico-sdk/naname2_tof&flow/third_party/ST_VL53L1X/VL53L1X_api.c \
- /home/shu/pico/pico-sdk/naname2_tof&flow/third_party/ST_VL53L1X/vl53l1_platform.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/third_party/ST_VL53L1X/vl53l1_types.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/third_party/ST_VL53L1X/VL53L1X_api.c \
+ /home/shu/pico/pico-sdk/naname_coputer-1/third_party/ST_VL53L1X/vl53l1_platform.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/third_party/ST_VL53L1X/vl53l1_types.h \
  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h \
  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h \
  /usr/include/newlib/string.h /usr/include/newlib/_ansi.h \
@@ -30,9 +30,9 @@ CMakeFiles/pico_copter.dir/third_party/ST_VL53L1X/VL53L1X_api.c.obj: \
  /home/shu/pico/pico-sdk/src/common/pico_base/include/pico/assert.h \
  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdbool.h \
  /usr/include/newlib/assert.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/build/generated/pico_base/pico/version.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/build/generated/pico_base/pico/version.h \
  /home/shu/pico/pico-sdk/src/common/pico_base/include/pico/config.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/build/generated/pico_base/pico/config_autogen.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/build/generated/pico_base/pico/config_autogen.h \
  /home/shu/pico/pico-sdk/src/boards/include/boards/pico.h \
  /home/shu/pico/pico-sdk/src/rp2_common/cmsis/include/cmsis/rename_exceptions.h \
  /home/shu/pico/pico-sdk/src/rp2_common/pico_platform/include/pico/platform.h \
@@ -85,4 +85,4 @@ CMakeFiles/pico_copter.dir/third_party/ST_VL53L1X/VL53L1X_api.c.obj: \
  /usr/include/newlib/time.h /usr/include/newlib/machine/time.h \
  /usr/include/newlib/math.h /usr/include/newlib/unistd.h \
  /usr/include/newlib/sys/unistd.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/third_party/ST_VL53L1X/VL53L1X_api.h
+ /home/shu/pico/pico-sdk/naname_coputer-1/third_party/ST_VL53L1X/VL53L1X_api.h

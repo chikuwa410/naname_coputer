@@ -39,9 +39,9 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/shu/pico/pico-sdk/naname2_tof&flow/build/pico-sdk/tools/cmake_install.cmake")
-  include("/home/shu/pico/pico-sdk/naname2_tof&flow/build/pico-sdk/src/cmake_install.cmake")
-  include("/home/shu/pico/pico-sdk/naname2_tof&flow/build/pico-sdk/docs/cmake_install.cmake")
+  include("/home/shu/pico/pico-sdk/naname_coputer-1/build/pico-sdk/tools/cmake_install.cmake")
+  include("/home/shu/pico/pico-sdk/naname_coputer-1/build/pico-sdk/src/cmake_install.cmake")
+  include("/home/shu/pico/pico-sdk/naname_coputer-1/build/pico-sdk/docs/cmake_install.cmake")
 
 endif()
 

@@ -1,6 +1,6 @@
 CMakeFiles/pico_copter.dir/sensor.cpp.obj: \
- /home/shu/pico/pico-sdk/naname2_tof&flow/sensor.cpp \
- /home/shu/pico/pico-sdk/naname2_tof&flow/sensor.hpp \
+ /home/shu/pico/pico-sdk/naname_coputer-1/sensor.cpp \
+ /home/shu/pico/pico-sdk/naname_coputer-1/sensor.hpp \
  /usr/include/newlib/string.h /usr/include/newlib/_ansi.h \
  /usr/include/newlib/newlib.h /usr/include/newlib/_newlib_version.h \
  /usr/include/newlib/sys/config.h /usr/include/newlib/machine/ieeefp.h \
@@ -32,9 +32,9 @@ CMakeFiles/pico_copter.dir/sensor.cpp.obj: \
  /usr/include/newlib/c++/10.3.1/pstl/pstl_config.h \
  /usr/include/newlib/assert.h \
  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/build/generated/pico_base/pico/version.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/build/generated/pico_base/pico/version.h \
  /home/shu/pico/pico-sdk/src/common/pico_base/include/pico/config.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/build/generated/pico_base/pico/config_autogen.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/build/generated/pico_base/pico/config_autogen.h \
  /home/shu/pico/pico-sdk/src/boards/include/boards/pico.h \
  /home/shu/pico/pico-sdk/src/rp2_common/cmsis/include/cmsis/rename_exceptions.h \
  /home/shu/pico/pico-sdk/src/rp2_common/pico_platform/include/pico/platform.h \
@@ -71,7 +71,7 @@ CMakeFiles/pico_copter.dir/sensor.cpp.obj: \
  /home/shu/pico/pico-sdk/src/rp2_common/hardware_spi/include/hardware/spi.h \
  /home/shu/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/spi.h \
  /home/shu/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/spi.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/lsm9ds1_reg.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/lsm9ds1_reg.h \
  /usr/include/newlib/c++/10.3.1/math.h \
  /usr/include/newlib/c++/10.3.1/cmath \
  /usr/include/newlib/c++/10.3.1/bits/cpp_type_traits.h \
@@ -108,8 +108,8 @@ CMakeFiles/pico_copter.dir/sensor.cpp.obj: \
  /usr/include/newlib/c++/10.3.1/tr1/poly_hermite.tcc \
  /usr/include/newlib/c++/10.3.1/tr1/poly_laguerre.tcc \
  /usr/include/newlib/c++/10.3.1/tr1/riemann_zeta.tcc \
- /home/shu/pico/pico-sdk/naname2_tof&flow/vl53l1_platform.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/vl53l1_types.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/vl53l1_platform.h \
+ /home/shu/pico/pico-sdk/naname_coputer-1/vl53l1_types.h \
  /usr/include/newlib/c++/10.3.1/cstdlib \
  /home/shu/pico/pico-sdk/src/rp2_common/hardware_i2c/include/hardware/i2c.h \
  /home/shu/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/i2c.h \
@@ -129,4 +129,4 @@ CMakeFiles/pico_copter.dir/sensor.cpp.obj: \
  /home/shu/pico/pico-sdk/lib/tinyusb/src/common/tusb_timeout.h \
  /usr/include/newlib/time.h /usr/include/newlib/machine/time.h \
  /usr/include/newlib/unistd.h /usr/include/newlib/sys/unistd.h \
- /home/shu/pico/pico-sdk/naname2_tof&flow/VL53L1X_api.h
+ /home/shu/pico/pico-sdk/naname_coputer-1/VL53L1X_api.h
